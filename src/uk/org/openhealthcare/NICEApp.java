@@ -43,70 +43,46 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.view.Menu; 
+import android.view.MenuInflater;
 import android.os.AsyncTask;
 
 
 public class NICEApp extends ListActivity {
 
-	private static final int PREFERENCES_GROUP_ID = 0;
-	private static final int SETTINGS_ID = 0;
-	private static final int HELP_ID = 1;
-	private static final int FEEDBACK_ID = 2;
-	private static final int ABOUT_ID = 3;
-	private static final int GETALL_ID = 4;
-	private static final int SEARCH_ID = 5;
 	private static boolean downloadLock = false;
 	GuidelineData guidelines;
-	ArrayAdapter<String> arrad;
-	ArrayAdapter<String> adapter = null;
 	ListView lv;
 
 	
 	@Override
-
-
-
-public boolean onCreateOptionsMenu(Menu menu)
+	public boolean onCreateOptionsMenu(Menu menu)
 	{
-	super.onCreateOptionsMenu(menu);
-
-	menu.add(PREFERENCES_GROUP_ID, SETTINGS_ID, 0, "settings")
-	.setIcon(android.R.drawable.ic_menu_preferences);
-	menu.add(PREFERENCES_GROUP_ID, HELP_ID, 0, "help")
-	.setIcon(android.R.drawable.ic_menu_help);
-	menu.add(PREFERENCES_GROUP_ID, FEEDBACK_ID, 0, "feedback")
-	.setIcon(android.R.drawable.ic_menu_send);
-	menu.add(PREFERENCES_GROUP_ID, ABOUT_ID, 0, "about")
-	.setIcon(android.R.drawable.ic_menu_info_details);
-	menu.add(PREFERENCES_GROUP_ID, GETALL_ID, 0, "download all")
-	.setIcon(android.R.drawable.ic_menu_save);
-	menu.add(PREFERENCES_GROUP_ID, SEARCH_ID, 0, "search")
-	.setIcon(android.R.drawable.ic_menu_search);
-
+	MenuInflater inflater = getMenuInflater();
+	inflater.inflate(R.menu.main_menu, menu);
 	return true;
 	} 
 	
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
 	switch (item.getItemId()) {
-	   case SETTINGS_ID: 
+	   case R.id.settings: 
 		   Toast.makeText(getApplicationContext(), 
 	               "Coming soon...", 
 	               Toast.LENGTH_LONG).show();
 	   			return true;
-	   case HELP_ID: Toast.makeText(getApplicationContext(), 
+	   case R.id.help: Toast.makeText(getApplicationContext(), 
                "Choose an item.\nMake sure you have a PDF Reader installed.", 
                Toast.LENGTH_LONG).show();
 				return true;
-	   case FEEDBACK_ID: Toast.makeText(getApplicationContext(), 
+	   case R.id.feedback: Toast.makeText(getApplicationContext(), 
                "http://openhealthcare.org.uk\n\nCome say hello :)", 
                Toast.LENGTH_LONG).show();
 	   			return true;	
-	   case ABOUT_ID: Toast.makeText(getApplicationContext(), 
+	   case R.id.about: Toast.makeText(getApplicationContext(), 
                "Developers:\nRoss Jones / Dr VJ Joshi / Neil McPhail", 
                Toast.LENGTH_LONG).show();
 				return true;
-	   case GETALL_ID: 
+	   case R.id.get_all: 
 		   
 		    AlertDialog ad = new AlertDialog.Builder(this).create();  
 		    //ad.setCancelable(false); // This blocks the 'BACK' button  
@@ -124,7 +100,7 @@ public boolean onCreateOptionsMenu(Menu menu)
 		   
 		   return true;
 
-	    case SEARCH_ID:
+	    case R.id.search:
 
 		   onSearchRequested();
 		   return true;
@@ -166,13 +142,7 @@ public boolean onCreateOptionsMenu(Menu menu)
 					long arg3) {
 
 					String key = (String) ((TextView) view).getText();
-					String url = guidelines.Get(key);
-					String hash  = MD5_Hash(url);
-					
-					String targetFile= pathToStorage( hash + ".pdf" );					
-					File file = new File(targetFile);
 					new AsyncDownload().execute(key);
-					//download(key);
 					// Hash it and look for it on disk, if not on disk then download locally
 					
 			}		   
@@ -221,38 +191,6 @@ public boolean onCreateOptionsMenu(Menu menu)
 		return sdcard.getAbsolutePath() + File.separator+ "nice_guidance" + File.separator;		
 	}
 	
-	public boolean download(String guideline) { 
-		//What is public stays public
-		AsyncTask myDownload = new AsyncDownload().execute(guideline);
-		try{
-			Boolean success = (Boolean) myDownload.get();
-			return success.booleanValue();
-		}catch(InterruptedException e){
-			return false;
-		}catch(java.util.concurrent.ExecutionException f){
-			return false;
-		}
-/*		String url = guidelines.Get(guideline);
-		String hash  = MD5_Hash(url);
-
-		String targetFile= pathToStorage( hash + ".pdf" );					
-		File file = new File(targetFile);
-		if ( ! file.exists() ) {
-			DownloadPDF p = new DownloadPDF();
-			try {
-				p.DownloadFrom(url, targetFile);
-                Toast.makeText(getApplicationContext(), 
-                        "Downloaded "+ guideline+" successfully", 
-                        Toast.LENGTH_SHORT).show();
-			
-			} catch ( Exception exc ){
-                Toast.makeText(getApplicationContext(), 
-                        "Failed to download the PDF " + exc.toString(), 
-                        Toast.LENGTH_LONG).show();
-                		return false;
-			}}
-		return true;	*/
-	}
 	private class AsyncDownload extends AsyncTask<String, String, Boolean> {
 		protected void onPreExecute() {
 			Toast.makeText(getApplicationContext(),
@@ -313,7 +251,7 @@ public boolean onCreateOptionsMenu(Menu menu)
 /*				Toast.makeText(getApplicationContext(),
 						eee.toString(),
 						Toast.LENGTH_SHORT).show();*/
-				return false;
+				return Boolean.FALSE;
 			}
 		}
 		protected void onProgressUpdate(String... progress) {
