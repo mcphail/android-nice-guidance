@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-	<item android:id="@+id/settings"
-		android:icon="@android:drawable/ic_menu_preferences"
-		android:title="@string/main_menu_option_settings" />
+	<item android:id="@+id/share"
+		android:icon="@android:drawable/ic_menu_share"
+		android:title="@string/main_menu_option_share" />
 	<item android:id="@+id/help"
 		android:icon="@android:drawable/ic_menu_help"
 		android:title="@string/main_menu_option_help" />

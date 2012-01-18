@@ -4,7 +4,7 @@
     <string name="app_label">NICE Guidelines</string>
     <string name="search_hint">Search guideline names</string>
 
-    <string name="main_menu_option_settings">settings</string>
+    <string name="main_menu_option_share">share</string>
     <string name="main_menu_option_help">help</string>
     <string name="main_menu_option_feedback">feedback</string>
     <string name="main_menu_option_about">about</string>
