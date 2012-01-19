@@ -219,8 +219,12 @@ public class NICEApp extends ListActivity {
 	    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 	      String query = intent.getStringExtra(SearchManager.QUERY);
 	      //arrad.getFilter().filter(query);
-	      lv.setFilterText(query);
+	      doMySearch(query);
 	    }
+	}
+
+	private void doMySearch(String query) {
+		lv.setFilterText(query);
 	}
 
 	public String MD5_Hash(String s) { 
@@ -356,13 +360,39 @@ public class NICEApp extends ListActivity {
 	
 	public class ColourArray extends ArrayAdapter<String> implements Filterable{
 		private final Activity context;
-		private final String[] names;
+		private String[] names;
 
 		public ColourArray(Activity context, String[] names) {
 			super(context, R.layout.list_item, names);
 			this.context = context;
 			this.names = names;
 
+		}
+
+		// Set a custom search filter
+		public Filter getFilter() {
+			return new MyFilter();
+		}
+
+		public class MyFilter extends Filter{
+
+			// Performed in async thread
+			protected Filter.FilterResults performFiltering(CharSequence constraint) {
+				Filter.FilterResults results = new Filter.FilterResults();
+				String[] test = {"one", "two", "three", "four"};
+				results.values = test;
+				results.count = 4;
+				return results;
+			}
+
+			// Performed in UI thread
+			protected void publishResults(CharSequence constraint, Filter.FilterResults results){
+				ArrayAdapter searchAdd;
+				Toast.makeText(getApplicationContext(), "Search Called",
+						Toast.LENGTH_SHORT).show();
+				searchAdd = new ColourArray(context, (String[]) results.values);
+				lv.setAdapter(searchAdd);
+			}
 		}
 
 		@Override
