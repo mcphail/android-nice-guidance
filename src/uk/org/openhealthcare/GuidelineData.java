@@ -38,7 +38,7 @@ public class GuidelineData {
 
 	final Map<String, String> map = new HashMap<String,String>();
 	
-	public GuidelineData(Context ctx) throws IOException, ParserConfigurationException, SAXException
+	public GuidelineData(Context ctx, String... limits) throws IOException, ParserConfigurationException, SAXException
 	{
 		// Load the XML from the assets folder and parse it into the map
 		InputStream inp = ctx.getAssets().open("xml/guidelines.xml");
@@ -52,15 +52,34 @@ public class GuidelineData {
 		}
 		
 		NodeList nodeList = doc.getElementsByTagName("guide");
+
+		// Do first loop to see whether there are any matches with the supplied limits
+		int count = 0;
 		for (int i = 0; i < nodeList.getLength(); i++) {
 			Node node = nodeList.item(i);
 			Element elem = (Element)node;
 			String nm = elem.getElementsByTagName("title").item(0).getFirstChild().getNodeValue().trim();
 			String url = elem.getElementsByTagName("url").item(0).getFirstChild().getNodeValue().trim();
-			map.put( nm, url );
+			for (int j = 0; j < limits.length; j++) {
+				if((limits[j].equals(nm))) {
+					map.put( nm, url );
+					count ++;
+				}
+			}
+		}
+
+		// Do another loop if no elements have been matched to return full set
+		if ((count == 0)) {
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				Node node = nodeList.item(i);
+				Element elem = (Element)node;
+				String nm = elem.getElementsByTagName("title").item(0).getFirstChild().getNodeValue().trim();
+				String url = elem.getElementsByTagName("url").item(0).getFirstChild().getNodeValue().trim();
+				map.put( nm, url );
+			} 
 		}
 	};
-	
+
 	String Get(String k) {
 		return map.get(k);
 	}
